@@ -1,25 +1,25 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import CheckLink from './Check_Link_Exist'
+import {Route, Link, Switch, Router} from 'react-router-dom'
 
-function App() {
+export const DefaultComp = ({children}) => <div>{children}</div>
+export const Acomp = ({location}) => (<div>{location.pathname}</div>)
+ 
+
+function App({history}) {
+  
+  const routeToDefaultRoute = () => {
+    history.push('/')
+  }
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router history={history}>
+      <Switch>
+        <Route path='/' render={ () => <DefaultComp>Hello Wordl</DefaultComp> } />
+        <Route path='/compA' render={ props => <Acomp {...props} onRoute={routeToDefaultRoute} />} />
+      </Switch>
+    </Router>
   );
 }
 
