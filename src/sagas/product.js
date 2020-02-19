@@ -1,7 +1,17 @@
-import { put } from 'redux-saga/effects'
+import { put, call } from 'redux-saga/effects'
+import 'whatwg-fetch'
 
-export function* addProduct() {
+function fetch(url, data) {
+  return window.fetch(url, {
+    body: JSON.stringify(data),
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-type': 'application/json'}
+  })
+}
+export function* addProduct({productBody}) {
   yield put({ type: 'ADD_PRODUCT_SUBMITTING'})
+  yield call(fetch, '/products', productBody)
 }
 
 const defaultState = {
