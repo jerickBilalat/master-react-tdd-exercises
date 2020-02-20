@@ -11,7 +11,20 @@ function fetch(url, data) {
 }
 export function* addProduct({productBody}) {
   yield put({ type: 'ADD_PRODUCT_SUBMITTING'})
-  yield call(fetch, '/products', productBody)
+
+  const response = yield call(fetch, '/products', productBody)
+
+  if(!response.ok) {
+    yield put({ type: 'ADD_PRODUCT_FAILED' })
+  }
+
+  const result = yield call([response, 'json'])
+
+    yield put({
+      type: 'ADD_PRODUCT_SUCCESSFUL',
+      product: result
+    })
+  
 }
 
 const defaultState = {
@@ -24,7 +37,11 @@ const defaultState = {
 export function reducer( state = defaultState, action) {
   switch(action.type) {
     case 'ADD_PRODUCT_SUBMITTING':
-      return {status: 'SUBMITTING'}
+      return {...state, status: 'SUBMITTING'}
+    case 'ADD_PRODUCT_FAILED':
+      return {...state, status: 'FAILED', error: true}
+    case 'ADD_PRODUCT_SUCCESSFUL':
+      return {...state, status: 'SUCCESS', error: false}
     default:
       return state
   }
