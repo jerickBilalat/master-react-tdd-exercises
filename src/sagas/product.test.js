@@ -1,7 +1,23 @@
+import React from 'react'
 import {storeSpy, expectRedux} from 'expect-redux'
+import { act } from 'react-dom/test-utils'
+import ReactDOM from 'react-dom'
+import {Provider} from 'react-redux'
 import 'whatwg-fetch'
 import { configureStore } from '../store'
 import { reducer } from './product'
+
+// helper
+const createContainerWithStore = component => {
+  const store = configureStore([storeSpy])
+
+  return act( () => {
+    ReactDOM.render(
+      <Provider store={store}>{component}</Provider>, 
+      document.createElement('div')
+    )
+  })
+}
 
 describe('addProduct', () => {
  
@@ -224,6 +240,20 @@ describe('reducer', () => {
       const expectedPieceOfState = {error: false}
       expect(state).toMatchObject(expectedPieceOfState)
 
+    })
+    it('sets product to provider product', () => {
+      // arrange and act
+      const fakeProduct = { name: "fake product" }
+      const action = {type: 'ADD_PRODUCT_SUCCESSFUL', product: fakeProduct}
+
+      const state = reducer(undefined, action)
+
+      const expectedPieceOfState = {
+        product: fakeProduct
+      }
+
+      // assert
+      expect(state).toMatchObject(expectedPieceOfState)
     })
 
   })

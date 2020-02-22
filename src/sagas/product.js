@@ -41,7 +41,7 @@ export function reducer( state = defaultState, action) {
     case 'ADD_PRODUCT_FAILED':
       return {...state, status: 'FAILED', error: true}
     case 'ADD_PRODUCT_SUCCESSFUL':
-      return {...state, status: 'SUCCESS', error: false}
+      return {...state, status: 'SUCCESS', error: false, product: {...action.product}}
     default:
       return state
   }
